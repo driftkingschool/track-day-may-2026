@@ -8,45 +8,18 @@
 
 'use strict';
 
-/* ====== CONFIG (לעדכון אחרי יצירת Google Form ו-CardCom) ====== */
+/* ====== CONFIG ====== */
+/*
+ * הקמה:
+ * 1. יוצרים Apps Script לפי ההוראות בקובץ 05_apps_script_create_form.js
+ * 2. מפעילים createDksTrackDayForm() פעם אחת (Run בדף ה-Apps Script)
+ * 3. Deploy as Web App > Anyone, ומעתיקים את ה-URL
+ * 4. מעדכנים CONFIG.appsScriptUrl למטה
+ * 5. Push update ל-GitHub
+ */
 const CONFIG = {
-  // Google Form: לעדכן אחרי שפול יוצר את הטופס
-  googleForm: {
-    formId: 'PLACEHOLDER_FORM_ID',
-    actionUrl: 'https://docs.google.com/forms/d/e/PLACEHOLDER_FORM_ID/formResponse',
-    entries: {
-      fullName: 'entry.PLACEHOLDER_NAME',
-      idNumber: 'entry.PLACEHOLDER_ID',
-      phone: 'entry.PLACEHOLDER_PHONE',
-      email: 'entry.PLACEHOLDER_EMAIL',
-      eventDate: 'entry.PLACEHOLDER_DATE',
-      carClass: 'entry.PLACEHOLDER_CARCLASS',
-      racingLicense: 'entry.PLACEHOLDER_LICENSE',
-      additionalDriver: 'entry.PLACEHOLDER_ADDDRIVER',
-      additionalName: 'entry.PLACEHOLDER_ADDNAME',
-      additionalId: 'entry.PLACEHOLDER_ADDID',
-      additionalLicense: 'entry.PLACEHOLDER_ADDLICENSE',
-      helmetPrimary: 'entry.PLACEHOLDER_HELMET1',
-      helmetSecondary: 'entry.PLACEHOLDER_HELMET2',
-      paymentOption: 'entry.PLACEHOLDER_PAYOPT',
-      notes: 'entry.PLACEHOLDER_NOTES',
-      calculatedTotal: 'entry.PLACEHOLDER_TOTAL'
-    }
-  },
-
-  // CardCom: לעדכן אחרי שAria מקימה את הדפים
-  cardcom: {
-    deposit: 'https://secure.cardcom.solutions/PLACEHOLDER_DEPOSIT',
-    400: 'https://secure.cardcom.solutions/PLACEHOLDER_400',
-    450: 'https://secure.cardcom.solutions/PLACEHOLDER_450',
-    500: 'https://secure.cardcom.solutions/PLACEHOLDER_500',
-    550: 'https://secure.cardcom.solutions/PLACEHOLDER_550',
-    650: 'https://secure.cardcom.solutions/PLACEHOLDER_650',
-    700: 'https://secure.cardcom.solutions/PLACEHOLDER_700',
-    750: 'https://secure.cardcom.solutions/PLACEHOLDER_750',
-    800: 'https://secure.cardcom.solutions/PLACEHOLDER_800',
-    850: 'https://secure.cardcom.solutions/PLACEHOLDER_850'
-  },
+  // Apps Script Web App URL , מעבד הכל (שמירה ל-Form + יצירת LP CardCom)
+  appsScriptUrl: 'PLACEHOLDER_APPS_SCRIPT_URL',
 
   pricing: {
     base: { regular: 400, highHP: 500 },
@@ -219,12 +192,11 @@ function updatePriceDisplay() {
 form.addEventListener('change', updatePriceDisplay);
 form.addEventListener('input', updatePriceDisplay);
 
-/* ====== SUBMIT: Google Form + CardCom Redirect ====== */
+/* ====== SUBMIT: Apps Script proxy (saves to Form + creates CardCom LP) ====== */
 form.addEventListener('submit', async e => {
   e.preventDefault();
   if (!validateStep(3)) return;
 
-  // Disable submit button
   const submitBtn = form.querySelector('.btn-submit');
   submitBtn.disabled = true;
   submitBtn.textContent = 'שולח...';
@@ -233,64 +205,102 @@ form.addEventListener('submit', async e => {
   const priceResult = calculatePrice(data);
   const formData = new FormData(form);
 
-  // Build Google Form submission payload
-  const params = new URLSearchParams();
-  const E = CONFIG.googleForm.entries;
-  params.append(E.fullName, formData.get('fullName') || '');
-  params.append(E.idNumber, formData.get('idNumber') || '');
-  params.append(E.phone, formData.get('phone') || '');
-  params.append(E.email, formData.get('email') || '');
-  params.append(E.eventDate, formData.get('eventDate') || '');
-  params.append(E.carClass, formData.get('carClass') || '');
-  params.append(E.racingLicense, formData.get('racingLicense') || '');
-  params.append(E.additionalDriver, formData.get('additionalDriver') || '');
-  params.append(E.additionalName, formData.get('additionalName') || '');
-  params.append(E.additionalId, formData.get('additionalId') || '');
-  params.append(E.additionalLicense, formData.get('additionalLicense') || '');
-  params.append(E.helmetPrimary, formData.get('helmetPrimary') || '');
-  params.append(E.helmetSecondary, formData.get('helmetSecondary') || '');
-  params.append(E.paymentOption, formData.get('paymentOption') || '');
-  params.append(E.notes, formData.get('notes') || '');
-  params.append(E.calculatedTotal, String(priceResult.total));
-
-  // Submit to Google Form (no-cors fire-and-forget)
-  try {
-    await fetch(CONFIG.googleForm.actionUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString()
-    });
-  } catch (err) {
-    console.warn('Google Form submission warning:', err);
-    // Continue regardless, since no-cors means we cannot read the response anyway
-  }
-
-  // Redirect to CardCom checkout
-  let cardcomUrl;
-  if (data.paymentOption === 'deposit') {
-    cardcomUrl = CONFIG.cardcom.deposit;
-  } else {
-    cardcomUrl = CONFIG.cardcom[priceResult.total];
-  }
-
-  if (!cardcomUrl || cardcomUrl.includes('PLACEHOLDER')) {
-    alert('שגיאה: דף הסליקה עוד לא הוקם. צור קשר ב-053-775-7323 להשלמת ההרשמה.');
+  if (!CONFIG.appsScriptUrl || CONFIG.appsScriptUrl.includes('PLACEHOLDER')) {
+    alert('שגיאה: ה-Backend עוד לא הוגדר. צור קשר ב-053-775-7323 להשלמת ההרשמה.');
     submitBtn.disabled = false;
     submitBtn.textContent = 'שלח ועבור לתשלום ←';
     return;
   }
 
-  // Pass tracking info via URL params (CardCom v11 supports ReturnValue)
-  const trackingValue = encodeURIComponent(
-    `${formData.get('eventDate')}|${data.carClass}|driver=${data.additionalDriver}|h1=${data.helmetPrimary}|h2=${data.helmetSecondary || 'none'}|total=${priceResult.total}`
-  );
-  const finalUrl = cardcomUrl + (cardcomUrl.includes('?') ? '&' : '?') + 'ReturnValue=' + trackingValue;
+  // Build single payload for Apps Script (saves to Form + creates LP)
+  const payload = {
+    fullName: formData.get('fullName') || '',
+    idNumber: formData.get('idNumber') || '',
+    phone: formData.get('phone') || '',
+    email: formData.get('email') || '',
+    racingLicense: formData.get('racingLicense') || '',
+    eventDate: formData.get('eventDate') || '',
+    carClass: formData.get('carClass') || '',
+    additionalDriver: formData.get('additionalDriver') || '',
+    additionalName: formData.get('additionalName') || '',
+    additionalId: formData.get('additionalId') || '',
+    additionalLicense: formData.get('additionalLicense') || '',
+    helmetPrimary: formData.get('helmetPrimary') || '',
+    helmetSecondary: formData.get('helmetSecondary') || '',
+    paymentOption: formData.get('paymentOption') || 'deposit',
+    notes: formData.get('notes') || '',
+    calculatedTotal: priceResult.total
+  };
 
-  // Redirect
-  window.location.href = finalUrl;
+  try {
+    const response = await fetch(CONFIG.appsScriptUrl, {
+      method: 'POST',
+      // Apps Script Web Apps prefer text/plain for cross-origin POSTs to avoid CORS preflight
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      redirect: 'follow'
+    });
+
+    const result = await response.json();
+
+    if (!result.ok) {
+      throw new Error(result.error || 'שגיאה בעיבוד ההרשמה');
+    }
+
+    // Redirect to CardCom payment page
+    window.location.href = result.lpUrl;
+
+  } catch (err) {
+    console.error('Submission error:', err);
+    alert('שגיאה: ' + (err.message || 'לא הצלחנו לעבד את הרישום') + '\nצור קשר 053-775-7323');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'שלח ועבור לתשלום ←';
+  }
 });
+
+/* ====== STATUS BANNER (post-CardCom redirect) ====== */
+function showStatusBanner() {
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('status');
+  if (!status) return;
+
+  const banner = document.getElementById('status-banner');
+  const icon = document.getElementById('status-icon');
+  const title = document.getElementById('status-title');
+  const msg = document.getElementById('status-msg');
+  const closeBtn = document.getElementById('status-close');
+  if (!banner) return;
+
+  const states = {
+    success: {
+      icon: '✅',
+      title: 'תשלום בוצע. ההרשמה אושרה.',
+      msg: 'תקבלי אישור באימייל. נתראה במסלול. בלי גבולות, רק עשן.'
+    },
+    failed: {
+      icon: '⚠️',
+      title: 'התשלום לא הצליח.',
+      msg: 'נסה שוב או צור קשר 053-775-7323. ההרשמה לא נקלטה.'
+    },
+    cancel: {
+      icon: 'ℹ️',
+      title: 'התשלום בוטל.',
+      msg: 'אפשר לחזור ולמלא טופס שוב. אם יש שאלה, 053-775-7323.'
+    }
+  };
+  const s = states[status];
+  if (!s) return;
+
+  banner.classList.add(status);
+  icon.textContent = s.icon;
+  title.textContent = s.title;
+  msg.textContent = s.msg;
+  banner.hidden = false;
+
+  closeBtn.addEventListener('click', () => { banner.hidden = true; });
+}
 
 /* ====== INIT ====== */
 syncConditionalFields();
 updatePriceDisplay();
+showStatusBanner();
