@@ -300,7 +300,26 @@ function showStatusBanner() {
   closeBtn.addEventListener('click', () => { banner.hidden = true; });
 }
 
+/* ====== REVEAL ON SCROLL ====== */
+function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window) || els.length === 0) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
+  els.forEach(el => obs.observe(el));
+}
+
 /* ====== INIT ====== */
 syncConditionalFields();
 updatePriceDisplay();
 showStatusBanner();
+initReveal();

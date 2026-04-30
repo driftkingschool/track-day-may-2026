@@ -11,12 +11,13 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="מאי 2026 במוטור סיטי , Drift King School">
   <meta property="og:description" content="חמישה ימי מסלול. בלי גבולות, רק עשן.">
-  <meta property="og:image" content="https://driftkingschool.github.io/track-day-may-2026/og-image.jpg">
+  <meta property="og:image" content="https://driftkingschool.github.io/track-day-may-2026/hero-fallback.jpg">
   <meta property="og:locale" content="he_IL">
 
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,23 +34,45 @@
 
 <!-- ============ HERO / ABOVE-THE-FOLD ============ -->
 <section class="hero">
-  <div class="hero-bg" aria-hidden="true"></div>
+  <video class="hero-video" autoplay muted loop playsinline poster="hero-fallback.jpg">
+    <source src="hero-bg.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
   <header class="topbar">
-    <div class="logo">DRIFT KING SCHOOL</div>
+    <div class="logo-wrap">
+      <img src="logo.png" alt="Drift King School" class="logo-img">
+      <span class="logo-name">DRIFT KING SCHOOL</span>
+    </div>
     <a href="#form" class="topbar-cta">שריין מקום</a>
   </header>
 
   <div class="hero-content">
-    <p class="hero-eyebrow">מאי 2026 , מוטור סיטי, באר שבע</p>
-    <h1 class="hero-title">חמישה ימי מסלול.<br>שמורים לקהילת DKS.</h1>
-    <p class="hero-sub">המסלול נסגר בעבורנו, חמש פעמים במאי. רכב שלך עם רישיון מירוצים, או הצטרף כנהג נוסף.</p>
+    <span class="hero-eyebrow">מאי 2026 . מוטור סיטי, באר שבע</span>
+    <h1 class="hero-title">חמישה ימי מסלול.<br><span class="accent">שמורים לקהילת DKS.</span></h1>
+    <p class="hero-sub">המסלול נסגר בעבורנו, חמש פעמים במאי. רכב שלך עם רישיון מירוצים, או הצטרף כנהג נוסף. אווירה רצינית, נהגים מוכרים, אספלט תקני.</p>
+
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">5</div>
+        <div class="hero-stat-label">ימי מסלול נבחרים</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">400₪</div>
+        <div class="hero-stat-label">החל מ , רכב רגיל</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">50₪</div>
+        <div class="hero-stat-label">מקדמה לשריון</div>
+      </div>
+    </div>
 
     <a href="#form" class="cta-primary">שריין את התאריך שלי</a>
     <p class="cta-microcopy">ללא חיוב מלא עכשיו. מקדמה 50 ₪ או תשלום מלא, אתה בוחר.</p>
 
     <div class="trust-strip">
       <span>בלי גבולות, רק עשן</span>
-      <span>•</span>
+      <span class="dot">•</span>
       <span>לביא אוחיון, נהג מירוצים רשמי בדריפט ומדריך מוסמך</span>
     </div>
   </div>
@@ -57,31 +80,33 @@
 </section>
 
 <!-- ============ WHY DKS ============ -->
-<section id="why" class="section section-dark">
+<section id="why" class="section">
   <div class="container">
-    <h2 class="section-title">למה כדאי להגיע</h2>
+    <span class="section-eyebrow">למה DKS</span>
+    <h2 class="section-title">כל מה שצריך כדי להיכנס למסלול בראש שקט.</h2>
+    <p class="section-sub">חמישה דברים שמייחדים את ימי המסלול שלנו ושאתה לא תקבל ביום פתוח אחר בארץ.</p>
     <ul class="why-grid">
-      <li>
+      <li class="reveal">
         <span class="why-num">01</span>
         <h3>מסלול בלעדי לקהילה</h3>
         <p>לא יום פתוח לכל מי שמשלם. רק נהגים שנרשמו מראש דרך DKS , קהל מוכר, אווירה רצינית.</p>
       </li>
-      <li>
+      <li class="reveal">
         <span class="why-num">02</span>
         <h3>מוטור סיטי, באר שבע</h3>
         <p>המסלול הגדול והמהיר בישראל. אספלט תקני, רוחב מלא, אזור פדוק מקצועי.</p>
       </li>
-      <li>
+      <li class="reveal">
         <span class="why-num">03</span>
         <h3>שקיפות מחיר מלאה</h3>
         <p>מחשבון חי בטופס. אתה רואה כמה תשלם לפני שנרשם. אין הפתעות בקופה.</p>
       </li>
-      <li>
+      <li class="reveal">
         <span class="why-num">04</span>
         <h3>מקדמה גמישה</h3>
         <p>תשלום מלא מראש או 50 ₪ פיקדון בלבד, היתרה במקום ביום האירוע. אתה מחליט.</p>
       </li>
-      <li>
+      <li class="reveal">
         <span class="why-num">05</span>
         <h3>קסדה? יש פתרון</h3>
         <p>חובה קסדה במסלול. אם אין לך , השכרה ב-50 ₪ ביום האירוע, מסומן בטופס מראש.</p>
@@ -91,60 +116,57 @@
 </section>
 
 <!-- ============ AVAILABLE DATES ============ -->
-<section id="dates" class="section">
+<section id="dates" class="section section-alt">
   <div class="container">
-    <h2 class="section-title">חמישה תאריכים. מאי 2026.</h2>
-    <p class="section-sub">בחר את התאריך שלך בטופס למטה. כל תאריך מוגבל במקומות.</p>
+    <span class="section-eyebrow">מאי 2026 . חמישה תאריכים</span>
+    <h2 class="section-title">בחר את היום שלך במסלול.</h2>
+    <p class="section-sub">כל תאריך מוגבל במקומות. ההרשמה דרך הטופס למטה בלבד.</p>
 
     <div class="dates-grid">
-      <article class="date-card">
+      <article class="date-card reveal">
         <div class="date-day">21</div>
         <div class="date-month">מאי 2026</div>
-        <div class="date-meta">חמישי , בוקר</div>
+        <div class="date-meta">חמישי</div>
         <div class="date-hours">08:00 , 14:00</div>
-        <div class="date-tag">יום מסלול שלם</div>
       </article>
 
-      <article class="date-card">
+      <article class="date-card reveal">
         <div class="date-day">06</div>
         <div class="date-month">מאי 2026</div>
-        <div class="date-meta">רביעי , אחה"צ</div>
+        <div class="date-meta">רביעי</div>
         <div class="date-hours">15:00 , 19:30</div>
-        <div class="date-tag">סשן אחה"צ סגור</div>
       </article>
 
-      <article class="date-card">
+      <article class="date-card reveal">
         <div class="date-day">13</div>
         <div class="date-month">מאי 2026</div>
-        <div class="date-meta">רביעי , אחה"צ</div>
+        <div class="date-meta">רביעי</div>
         <div class="date-hours">15:00 , 19:30</div>
-        <div class="date-tag">סשן אחה"צ סגור</div>
       </article>
 
-      <article class="date-card">
+      <article class="date-card reveal">
         <div class="date-day">20</div>
         <div class="date-month">מאי 2026</div>
-        <div class="date-meta">רביעי , אחה"צ</div>
+        <div class="date-meta">רביעי</div>
         <div class="date-hours">15:00 , 19:30</div>
-        <div class="date-tag">סשן אחה"צ סגור</div>
       </article>
 
-      <article class="date-card">
+      <article class="date-card reveal">
         <div class="date-day">27</div>
         <div class="date-month">מאי 2026</div>
-        <div class="date-meta">רביעי , אחה"צ</div>
+        <div class="date-meta">רביעי</div>
         <div class="date-hours">15:00 , 19:30</div>
-        <div class="date-tag">סשן אחה"צ סגור</div>
       </article>
     </div>
   </div>
 </section>
 
 <!-- ============ PRICING ============ -->
-<section id="pricing" class="section section-dark">
+<section id="pricing" class="section">
   <div class="container">
-    <h2 class="section-title">מחיר שקוף. בלי הפתעות.</h2>
-    <p class="section-sub">הסכום הסופי תלוי בבחירות שלך בטופס. הנה הבסיס:</p>
+    <span class="section-eyebrow">מחיר שקוף</span>
+    <h2 class="section-title">בלי הפתעות. בלי כוכביות.</h2>
+    <p class="section-sub">הסכום הסופי תלוי בבחירות שלך בטופס. הנה מחירי הבסיס:</p>
 
     <div class="pricing-grid">
       <div class="price-card">
@@ -175,10 +197,11 @@
 </section>
 
 <!-- ============ FORM ============ -->
-<section id="form" class="section">
+<section id="form" class="section section-alt">
   <div class="container">
-    <h2 class="section-title">הרשמה ושריון מקום</h2>
-    <p class="section-sub">3 שלבים. כל הפרטים שמורים. בסוף, ישר לדף תשלום.</p>
+    <span class="section-eyebrow">הרשמה ושריון מקום</span>
+    <h2 class="section-title">3 שלבים. ישר לדף תשלום.</h2>
+    <p class="section-sub">כל הפרטים שמורים אצלנו ובקרדקום. בסוף הטופס , תועבר אוטומטית לתשלום.</p>
 
     <div class="form-progress">
       <div class="progress-step active" data-step="1">פרטים</div>
@@ -401,7 +424,7 @@
 
         <div class="form-actions">
           <button type="button" class="btn-back" data-target="2">חזרה</button>
-          <button type="submit" class="btn-submit">שלח ועבור לתשלום ←</button>
+          <button type="submit" class="btn-submit">שלח ועבור לתשלום</button>
         </div>
       </fieldset>
     </form>
@@ -409,9 +432,11 @@
 </section>
 
 <!-- ============ FAQ ============ -->
-<section id="faq" class="section section-dark">
+<section id="faq" class="section">
   <div class="container">
-    <h2 class="section-title">שאלות נפוצות</h2>
+    <span class="section-eyebrow">שאלות נפוצות</span>
+    <h2 class="section-title">השאלות שהכי שואלים אותנו.</h2>
+    <p class="section-sub">לא מצאת תשובה? התקשרו 053-775-7323.</p>
 
     <details>
       <summary>האם הרכב שלי מתאים?</summary>
@@ -451,7 +476,7 @@
 </section>
 
 <!-- ============ FINAL CTA ============ -->
-<section class="section final-cta">
+<section class="final-cta">
   <div class="container">
     <h2>חמישה תאריכים. מקומות מוגבלים.</h2>
     <p>רכב שלא ירשם מראש , לא יעלה למסלול.</p>
@@ -466,7 +491,7 @@
 <!-- ============ FOOTER ============ -->
 <footer class="footer">
   <div class="container">
-    <p class="motto">בלי גבולות, רק עשן.</p>
+    <p class="motto">בלי גבולות, רק עשן</p>
     <p>Drift King School . מוטור סיטי, באר שבע</p>
     <p>
       <a href="https://driftkingschool.com">driftkingschool.com</a> .
