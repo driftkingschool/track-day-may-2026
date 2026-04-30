@@ -37,7 +37,15 @@
 
   /* Type */
   --font-he: 'Heebo', 'Inter', system-ui, sans-serif;
+  --font-en: 'Inter', 'Heebo', system-ui, sans-serif;
+  --font-ru: 'Inter', 'Heebo', system-ui, sans-serif;
+  --font-ar: 'Cairo', 'Heebo', system-ui, sans-serif;
 }
+
+html[lang="he"] body { font-family: var(--font-he); }
+html[lang="en"] body { font-family: var(--font-en); }
+html[lang="ru"] body { font-family: var(--font-ru); }
+html[lang="ar"] body { font-family: var(--font-ar); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -194,6 +202,7 @@ a:hover { color: var(--gold); }
   font-size: 0.85rem;
   color: #fff;
 }
+.topbar-actions { display: flex; align-items: center; gap: 0.6rem; }
 .topbar-cta {
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
   color: #0a0a0a !important;
@@ -206,6 +215,76 @@ a:hover { color: var(--gold); }
   transition: transform 0.15s, box-shadow 0.15s;
 }
 .topbar-cta:hover { transform: translateY(-1px); color: #0a0a0a; box-shadow: 0 24px 60px rgba(200, 168, 90, 0.4); }
+
+/* ====== LANGUAGE TOGGLE ====== */
+.lang-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(200, 168, 90, 0.4);
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', system-ui, sans-serif;
+  backdrop-filter: blur(8px);
+}
+.lang-toggle:hover {
+  background: var(--gold);
+  color: #0a0a0a;
+  border-color: var(--gold);
+}
+.lang-float {
+  position: fixed;
+  bottom: 1.25rem;
+  inset-inline-end: 1.25rem;
+  z-index: 60;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  color: #0a0a0a;
+  border: none;
+  padding: 0.85rem 1.15rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  box-shadow: var(--shadow-gold);
+  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.lang-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 70px rgba(200, 168, 90, 0.45);
+}
+
+/* ====== PHONE LINK (gold pill) ====== */
+.phone-link {
+  display: inline-block;
+  color: var(--gold-light) !important;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(200, 168, 90, 0.4);
+  padding: 0 0.15rem;
+  transition: color 0.15s, border-color 0.15s;
+  direction: ltr;
+  unicode-bidi: embed;
+}
+.phone-link:hover {
+  color: var(--gold) !important;
+  border-bottom-color: var(--gold);
+}
+/* On light backgrounds */
+.section:not(.section-dark) .phone-link,
+.section-alt .phone-link {
+  color: var(--gold-dark) !important;
+  border-bottom-color: rgba(155, 127, 53, 0.4);
+}
+.section:not(.section-dark) .phone-link:hover,
+.section-alt .phone-link:hover {
+  color: var(--gold) !important;
+  border-bottom-color: var(--gold);
+}
 
 .hero-content {
   position: relative;

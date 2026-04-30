@@ -8,6 +8,118 @@
 
 'use strict';
 
+/* ====== I18N ====== */
+const LANG_CYCLE = ['he', 'en', 'ru', 'ar'];
+const LANG_LABELS = { he: 'HE', en: 'EN', ru: 'RU', ar: 'AR' };
+const RTL_LANGS = new Set(['he', 'ar']);
+const STORAGE_KEY = 'dks-tdm26-lang';
+
+const I18N_BREAKDOWN = {
+  carRegular: { he: 'רכב רגיל', en: 'Standard car', ru: 'Обычный авто', ar: 'سيارة عادية' },
+  carHighHP:  { he: 'רכב דריפט 300+ כ"ס', en: 'Drift car 300+ HP', ru: 'Дрифт-кар 300+ л.с.', ar: 'سيارة دريفت +300 حصان' },
+  addDriver:  { he: 'נהג נוסף', en: 'Additional driver', ru: 'Доп. водитель', ar: 'سائق إضافي' },
+  helmet1:    { he: 'השכרת קסדה לנהג ראשי', en: 'Helmet rental (primary)', ru: 'Аренда шлема (осн.)', ar: 'استئجار خوذة (رئيسي)' },
+  helmet2:    { he: 'השכרת קסדה לנהג נוסף', en: 'Helmet rental (additional)', ru: 'Аренда шлема (доп.)', ar: 'استئجار خوذة (إضافي)' }
+};
+
+const I18N_STATUS = {
+  success: {
+    he: { icon: '✅', title: 'תשלום בוצע. ההרשמה אושרה.', msg: 'תקבל אישור באימייל. נתראה במסלול. בלי גבולות, רק עשן.' },
+    en: { icon: '✅', title: 'Payment successful. Registration confirmed.', msg: 'You\'ll receive an email confirmation. See you on the track. No limits, just smoke.' },
+    ru: { icon: '✅', title: 'Оплата прошла. Регистрация подтверждена.', msg: 'Вы получите подтверждение по email. Увидимся на трассе.' },
+    ar: { icon: '✅', title: 'تم الدفع. التسجيل مؤكد.', msg: 'ستصلك رسالة تأكيد بالبريد. نراك في المضمار.' }
+  },
+  failed: {
+    he: { icon: '⚠️', title: 'התשלום לא הצליח.', msg: 'נסה שוב או צור קשר 053-775-7323. ההרשמה לא נקלטה.' },
+    en: { icon: '⚠️', title: 'Payment failed.', msg: 'Try again or call 053-775-7323. Registration was not saved.' },
+    ru: { icon: '⚠️', title: 'Оплата не прошла.', msg: 'Попробуйте снова или позвоните 053-775-7323. Регистрация не сохранена.' },
+    ar: { icon: '⚠️', title: 'فشل الدفع.', msg: 'حاول مرة أخرى أو اتصل بـ 053-775-7323. لم يتم حفظ التسجيل.' }
+  },
+  cancel: {
+    he: { icon: 'ℹ️', title: 'התשלום בוטל.', msg: 'אפשר לחזור ולמלא טופס שוב. אם יש שאלה, 053-775-7323.' },
+    en: { icon: 'ℹ️', title: 'Payment canceled.', msg: 'You can fill in the form again. Questions? 053-775-7323.' },
+    ru: { icon: 'ℹ️', title: 'Оплата отменена.', msg: 'Можно заполнить форму снова. Вопросы? 053-775-7323.' },
+    ar: { icon: 'ℹ️', title: 'تم إلغاء الدفع.', msg: 'يمكنك ملء النموذج مرة أخرى. أسئلة؟ 053-775-7323.' }
+  }
+};
+
+const I18N_ALERTS = {
+  backendNotConfigured: {
+    he: 'שגיאה: ה-Backend עוד לא הוגדר. צור קשר ב-053-775-7323.',
+    en: 'Error: backend not configured. Call 053-775-7323.',
+    ru: 'Ошибка: бэкенд не настроен. Позвоните 053-775-7323.',
+    ar: 'خطأ: الواجهة الخلفية غير مُعدّة. اتصل بـ 053-775-7323.'
+  },
+  submitting: { he: 'שולח...', en: 'Sending...', ru: 'Отправка...', ar: 'جاري الإرسال...' },
+  submitBtn: { he: 'שלח ועבור לתשלום', en: 'Submit & pay', ru: 'Отправить и оплатить', ar: 'إرسال والدفع' },
+  generalError: {
+    he: 'לא הצלחנו לעבד את הרישום',
+    en: 'Could not process registration',
+    ru: 'Не удалось обработать регистрацию',
+    ar: 'تعذر معالجة التسجيل'
+  },
+  matrixWarn: {
+    he: amt => `שים לב, סכום ${amt} ₪ לא תואם למטריצה. צור קשר 053-775-7323`,
+    en: amt => `Note: amount ₪${amt} not in price matrix. Call 053-775-7323`,
+    ru: amt => `Внимание: сумма ₪${amt} не в матрице. Звоните 053-775-7323`,
+    ar: amt => `تنبيه: المبلغ ₪${amt} غير ضمن المصفوفة. اتصل بـ 053-775-7323`
+  }
+};
+
+let currentLang = 'he';
+
+function getStoredLang() {
+  try { return localStorage.getItem(STORAGE_KEY) || 'he'; } catch { return 'he'; }
+}
+function setStoredLang(lang) {
+  try { localStorage.setItem(STORAGE_KEY, lang); } catch {}
+}
+
+function applyLanguage(lang) {
+  if (!LANG_CYCLE.includes(lang)) lang = 'he';
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = RTL_LANGS.has(lang) ? 'rtl' : 'ltr';
+
+  // Update all elements with data-{lang} attributes
+  document.querySelectorAll('[data-he]').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if (val !== null) el.innerHTML = val;
+  });
+
+  // Update placeholders
+  document.querySelectorAll('[data-placeholder-he]').forEach(el => {
+    const val = el.getAttribute('data-placeholder-' + lang);
+    if (val !== null) el.placeholder = val;
+  });
+
+  // Update language toggle labels (cycle to NEXT language)
+  const idx = LANG_CYCLE.indexOf(lang);
+  const nextLang = LANG_CYCLE[(idx + 1) % LANG_CYCLE.length];
+  document.querySelectorAll('[data-cur-lang]').forEach(el => {
+    el.textContent = LANG_LABELS[nextLang];
+  });
+
+  setStoredLang(lang);
+
+  // Re-render dynamic parts (price breakdown)
+  if (typeof updatePriceDisplay === 'function') updatePriceDisplay();
+  // Re-render status banner if visible
+  if (typeof refreshStatusBannerLang === 'function') refreshStatusBannerLang();
+}
+
+function cycleLanguage() {
+  const idx = LANG_CYCLE.indexOf(currentLang);
+  const next = LANG_CYCLE[(idx + 1) % LANG_CYCLE.length];
+  applyLanguage(next);
+}
+
+document.addEventListener('click', e => {
+  if (e.target.closest('#lang-toggle-top') || e.target.closest('#lang-toggle-float')) {
+    cycleLanguage();
+  }
+});
+
 /* ====== CONFIG ====== */
 /*
  * הקמה:
@@ -131,26 +243,27 @@ function collectFormData() {
 
 function calculatePrice(d) {
   const breakdown = [];
+  const L = key => I18N_BREAKDOWN[key][currentLang] || I18N_BREAKDOWN[key].he;
   let total = d.carClass === 'highHP' ? CONFIG.pricing.base.highHP : CONFIG.pricing.base.regular;
   breakdown.push({
-    label: d.carClass === 'highHP' ? 'רכב דריפט 300+ כ"ס' : 'רכב רגיל',
+    label: d.carClass === 'highHP' ? L('carHighHP') : L('carRegular'),
     amount: total
   });
 
   if (d.additionalDriver === 'yes') {
     const addAmount = CONFIG.pricing.addons.additionalDriver;
     total += addAmount;
-    breakdown.push({ label: 'נהג נוסף', amount: addAmount });
+    breakdown.push({ label: L('addDriver'), amount: addAmount });
 
     if (d.helmetSecondary === 'yes') {
       total += CONFIG.pricing.addons.helmetRental;
-      breakdown.push({ label: 'השכרת קסדה לנהג נוסף', amount: CONFIG.pricing.addons.helmetRental });
+      breakdown.push({ label: L('helmet2'), amount: CONFIG.pricing.addons.helmetRental });
     }
   }
 
   if (d.helmetPrimary === 'yes') {
     total += CONFIG.pricing.addons.helmetRental;
-    breakdown.push({ label: 'השכרת קסדה לנהג ראשי', amount: CONFIG.pricing.addons.helmetRental });
+    breakdown.push({ label: L('helmet1'), amount: CONFIG.pricing.addons.helmetRental });
   }
 
   const payNow = d.paymentOption === 'full' ? total : CONFIG.pricing.deposit;
@@ -182,7 +295,8 @@ function updatePriceDisplay() {
   const warn = document.getElementById('warning');
   if (!result.validPrice) {
     warn.hidden = false;
-    warn.textContent = `שים לב, סכום ${result.total} ₪ לא תואם למטריצת המחירים. צור קשר 053-775-7323`;
+    const fn = I18N_ALERTS.matrixWarn[currentLang] || I18N_ALERTS.matrixWarn.he;
+    warn.textContent = fn(result.total);
   } else {
     warn.hidden = true;
   }
@@ -199,16 +313,16 @@ form.addEventListener('submit', async e => {
 
   const submitBtn = form.querySelector('.btn-submit');
   submitBtn.disabled = true;
-  submitBtn.textContent = 'שולח...';
+  submitBtn.textContent = I18N_ALERTS.submitting[currentLang] || I18N_ALERTS.submitting.he;
 
   const data = collectFormData();
   const priceResult = calculatePrice(data);
   const formData = new FormData(form);
 
   if (!CONFIG.appsScriptUrl || CONFIG.appsScriptUrl.includes('PLACEHOLDER')) {
-    alert('שגיאה: ה-Backend עוד לא הוגדר. צור קשר ב-053-775-7323 להשלמת ההרשמה.');
+    alert(I18N_ALERTS.backendNotConfigured[currentLang] || I18N_ALERTS.backendNotConfigured.he);
     submitBtn.disabled = false;
-    submitBtn.textContent = 'שלח ועבור לתשלום ←';
+    submitBtn.textContent = I18N_ALERTS.submitBtn[currentLang] || I18N_ALERTS.submitBtn.he;
     return;
   }
 
@@ -252,52 +366,45 @@ form.addEventListener('submit', async e => {
 
   } catch (err) {
     console.error('Submission error:', err);
-    alert('שגיאה: ' + (err.message || 'לא הצלחנו לעבד את הרישום') + '\nצור קשר 053-775-7323');
+    const generalMsg = I18N_ALERTS.generalError[currentLang] || I18N_ALERTS.generalError.he;
+    alert((err.message || generalMsg) + '\n053-775-7323');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'שלח ועבור לתשלום ←';
+    submitBtn.textContent = I18N_ALERTS.submitBtn[currentLang] || I18N_ALERTS.submitBtn.he;
   }
 });
 
 /* ====== STATUS BANNER (post-CardCom redirect) ====== */
+let _currentStatusKey = null;
+
+function refreshStatusBannerLang() {
+  if (!_currentStatusKey) return;
+  const banner = document.getElementById('status-banner');
+  if (!banner || banner.hidden) return;
+  const s = (I18N_STATUS[_currentStatusKey] || {})[currentLang] || (I18N_STATUS[_currentStatusKey] || {}).he;
+  if (!s) return;
+  document.getElementById('status-icon').textContent = s.icon;
+  document.getElementById('status-title').textContent = s.title;
+  document.getElementById('status-msg').textContent = s.msg;
+}
+
 function showStatusBanner() {
   const params = new URLSearchParams(window.location.search);
   const status = params.get('status');
-  if (!status) return;
+  if (!status || !I18N_STATUS[status]) return;
 
   const banner = document.getElementById('status-banner');
-  const icon = document.getElementById('status-icon');
-  const title = document.getElementById('status-title');
-  const msg = document.getElementById('status-msg');
   const closeBtn = document.getElementById('status-close');
   if (!banner) return;
 
-  const states = {
-    success: {
-      icon: '✅',
-      title: 'תשלום בוצע. ההרשמה אושרה.',
-      msg: 'תקבלי אישור באימייל. נתראה במסלול. בלי גבולות, רק עשן.'
-    },
-    failed: {
-      icon: '⚠️',
-      title: 'התשלום לא הצליח.',
-      msg: 'נסה שוב או צור קשר 053-775-7323. ההרשמה לא נקלטה.'
-    },
-    cancel: {
-      icon: 'ℹ️',
-      title: 'התשלום בוטל.',
-      msg: 'אפשר לחזור ולמלא טופס שוב. אם יש שאלה, 053-775-7323.'
-    }
-  };
-  const s = states[status];
-  if (!s) return;
-
+  _currentStatusKey = status;
   banner.classList.add(status);
-  icon.textContent = s.icon;
-  title.textContent = s.title;
-  msg.textContent = s.msg;
   banner.hidden = false;
+  refreshStatusBannerLang();
 
-  closeBtn.addEventListener('click', () => { banner.hidden = true; });
+  closeBtn.addEventListener('click', () => {
+    banner.hidden = true;
+    _currentStatusKey = null;
+  });
 }
 
 /* ====== REVEAL ON SCROLL ====== */
@@ -319,6 +426,7 @@ function initReveal() {
 }
 
 /* ====== INIT ====== */
+applyLanguage(getStoredLang());
 syncConditionalFields();
 updatePriceDisplay();
 showStatusBanner();
