@@ -19,7 +19,7 @@
  */
 const CONFIG = {
   // Apps Script Web App URL , מעבד הכל (שמירה ל-Form + יצירת LP CardCom)
-  appsScriptUrl: 'PLACEHOLDER_APPS_SCRIPT_URL',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbyX80BdKV6fdp7ylZwmIKVSQOGWLQugqnoEs57EiViBZNdN5zI0U08qsVyo1iebB6N7ow/exec',
 
   pricing: {
     base: { regular: 400, highHP: 500 },
