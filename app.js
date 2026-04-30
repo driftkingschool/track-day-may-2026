@@ -93,11 +93,18 @@ function applyLanguage(lang) {
     if (val !== null) el.placeholder = val;
   });
 
-  // Update language toggle labels (cycle to NEXT language)
-  const idx = LANG_CYCLE.indexOf(lang);
-  const nextLang = LANG_CYCLE[(idx + 1) % LANG_CYCLE.length];
+  // Show CURRENT language code on the toggle button
   document.querySelectorAll('[data-cur-lang]').forEach(el => {
-    el.textContent = LANG_LABELS[nextLang];
+    el.textContent = LANG_LABELS[lang];
+  });
+
+  // Mark currently selected item in menus
+  document.querySelectorAll('.lang-menu button[data-lang]').forEach(btn => {
+    if (btn.getAttribute('data-lang') === lang) {
+      btn.setAttribute('aria-current', 'true');
+    } else {
+      btn.removeAttribute('aria-current');
+    }
   });
 
   setStoredLang(lang);
@@ -108,16 +115,51 @@ function applyLanguage(lang) {
   if (typeof refreshStatusBannerLang === 'function') refreshStatusBannerLang();
 }
 
-function cycleLanguage() {
-  const idx = LANG_CYCLE.indexOf(currentLang);
-  const next = LANG_CYCLE[(idx + 1) % LANG_CYCLE.length];
-  applyLanguage(next);
+/* ====== LANGUAGE MENU OPEN/CLOSE ====== */
+function closeAllLangMenus() {
+  document.querySelectorAll('.lang-wrap').forEach(wrap => {
+    const menu = wrap.querySelector('.lang-menu');
+    const trigger = wrap.querySelector('.lang-toggle, .lang-float');
+    if (menu) menu.hidden = true;
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function toggleLangMenu(wrap) {
+  const menu = wrap.querySelector('.lang-menu');
+  const trigger = wrap.querySelector('.lang-toggle, .lang-float');
+  if (!menu || !trigger) return;
+  const isOpen = !menu.hidden;
+  closeAllLangMenus();
+  if (!isOpen) {
+    menu.hidden = false;
+    trigger.setAttribute('aria-expanded', 'true');
+  }
 }
 
 document.addEventListener('click', e => {
-  if (e.target.closest('#lang-toggle-top') || e.target.closest('#lang-toggle-float')) {
-    cycleLanguage();
+  // Click on language item inside a menu
+  const langItem = e.target.closest('.lang-menu button[data-lang]');
+  if (langItem) {
+    applyLanguage(langItem.getAttribute('data-lang'));
+    closeAllLangMenus();
+    return;
   }
+  // Click on toggle/float button to open/close menu
+  const trigger = e.target.closest('.lang-wrap .lang-toggle, .lang-wrap .lang-float');
+  if (trigger) {
+    const wrap = trigger.closest('.lang-wrap');
+    if (wrap) toggleLangMenu(wrap);
+    return;
+  }
+  // Click outside any menu , close all
+  if (!e.target.closest('.lang-wrap')) {
+    closeAllLangMenus();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAllLangMenus();
 });
 
 /* ====== CONFIG ====== */
