@@ -58,8 +58,27 @@
         </ul>
       </div>
       <a href="#form" class="topbar-cta" data-he="שריין מקום" data-en="Reserve" data-ru="Забронировать" data-ar="احجز مكاناً">שריין מקום</a>
+      <button class="hamburger" id="hamburger" type="button" aria-label="תפריט" aria-expanded="false" aria-controls="mobileMenu"
+              data-aria-label-he="תפריט" data-aria-label-en="Menu" data-aria-label-ru="Меню" data-aria-label-ar="القائمة">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
+
+  <div class="mobile-menu" id="mobileMenu" role="navigation">
+    <a href="#track" onclick="closeMobile()" data-he="המסלול" data-en="The Track" data-ru="Трасса" data-ar="المضمار">המסלול</a>
+    <a href="#dates" onclick="closeMobile()" data-he="תאריכים" data-en="Dates" data-ru="Даты" data-ar="التواريخ">תאריכים</a>
+    <a href="#pricing" onclick="closeMobile()" data-he="מחירים" data-en="Pricing" data-ru="Цены" data-ar="الأسعار">מחירים</a>
+    <a href="#form" onclick="closeMobile()" data-he="הרשמה" data-en="Register" data-ru="Регистрация" data-ar="التسجيل">הרשמה</a>
+    <a href="#faq" onclick="closeMobile()" data-he="שאלות נפוצות" data-en="FAQ" data-ru="FAQ" data-ar="الأسئلة الشائعة">שאלות נפוצות</a>
+    <a href="#form" class="topbar-cta mobile-cta" onclick="closeMobile()" data-he="שריין את התאריך שלי" data-en="Reserve my date" data-ru="Забронировать мою дату" data-ar="احجز تاريخي">שריין את התאריך שלי</a>
+    <div class="cross-nav-section">
+      <h4 class="cross-nav-header" data-he="אתרים נוספים שלנו" data-en="More from DKS" data-ru="Другие сайты DKS" data-ar="مواقع DKS الأخرى">אתרים נוספים שלנו</h4>
+      <a href="https://driftkingschool.github.io/" target="_blank" rel="noopener" class="cross-nav-link" data-he="מחירון חוויות יומיומיות" data-en="Daily Experiences" data-ru="Ежедневный прайс" data-ar="تجارب يومية">מחירון חוויות יומיומיות</a>
+      <a href="https://driftkingschool.github.io/dks-courses/" target="_blank" rel="noopener" class="cross-nav-link" data-he="קורסים מקצועיים" data-en="Pro Courses" data-ru="Профессиональные курсы" data-ar="دورات احترافية">קורסים מקצועיים</a>
+      <a href="https://driftkingschool.github.io/dks-bangkok/" target="_blank" rel="noopener" class="cross-nav-link" data-he="דריפט בתאילנד" data-en="Drift in Thailand" data-ru="Дрифт в Таиланде" data-ar="دريفت في تايلاند">Drift in Thailand</a>
+    </div>
+  </div>
 
   <div class="hero-content">
     <span class="hero-eyebrow" data-he="מאי 2026 . מוטור סיטי, באר שבע" data-en="May 2026 . Motor City, Be'er Sheva" data-ru="Май 2026 . Motor City, Беэр-Шева" data-ar="مايو 2026 . موتور سيتي, بئر السبع">מאי 2026 . מוטור סיטי, באר שבע</span>

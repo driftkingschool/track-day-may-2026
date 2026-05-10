@@ -467,9 +467,31 @@ function initReveal() {
   els.forEach(el => obs.observe(el));
 }
 
+/* ====== HAMBURGER / MOBILE MENU ====== */
+function initHamburger() {
+  const hamburger = document.getElementById('hamburger');
+  const menu = document.getElementById('mobileMenu');
+  if (!hamburger || !menu) return;
+  hamburger.addEventListener('click', () => {
+    const opened = menu.classList.toggle('open');
+    hamburger.classList.toggle('open', opened);
+    hamburger.setAttribute('aria-expanded', opened ? 'true' : 'false');
+  });
+}
+window.closeMobile = function () {
+  const hamburger = document.getElementById('hamburger');
+  const menu = document.getElementById('mobileMenu');
+  if (hamburger) {
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }
+  if (menu) menu.classList.remove('open');
+};
+
 /* ====== INIT ====== */
 applyLanguage(getStoredLang());
 syncConditionalFields();
 updatePriceDisplay();
 showStatusBanner();
 initReveal();
+initHamburger();
