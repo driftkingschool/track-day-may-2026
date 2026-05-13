@@ -17,6 +17,9 @@ const STORAGE_KEY = 'dks-tdm26-lang';
 const I18N_BREAKDOWN = {
   carRegular: { he: 'רכב רגיל', en: 'Standard car', ru: 'Обычный авто', ar: 'سيارة عادية' },
   carHighHP:  { he: 'רכב דריפט 300+ כ"ס', en: 'Drift car 300+ HP', ru: 'Дрифт-кар 300+ л.с.', ar: 'سيارة دريفت +300 حصان' },
+  carMazda:   { he: 'מאזדה מיאטה (רכב של DKS)', en: 'Mazda Miata (DKS car)', ru: 'Mazda Miata (машина DKS)', ar: 'مازدا مياتا (سيارة DKS)' },
+  carPorsche: { he: 'פורש 718-S (רכב של DKS)', en: 'Porsche 718-S (DKS car)', ru: 'Porsche 718-S (машина DKS)', ar: 'بورش 718-S (سيارة DKS)' },
+  carM3:      { he: 'ב.מ.וו M3 COMPETITION (רכב של DKS)', en: 'BMW M3 COMPETITION (DKS car)', ru: 'BMW M3 COMPETITION (машина DKS)', ar: 'بي إم دبليو M3 COMPETITION (سيارة DKS)' },
   addDriver:  { he: 'נהג נוסף', en: 'Additional driver', ru: 'Доп. водитель', ar: 'سائق إضافي' },
   helmet1:    { he: 'השכרת קסדה לנהג ראשי', en: 'Helmet rental (primary)', ru: 'Аренда шлема (осн.)', ar: 'استئجار خوذة (رئيسي)' },
   helmet2:    { he: 'השכרת קסדה לנהג נוסף', en: 'Helmet rental (additional)', ru: 'Аренда шлема (доп.)', ar: 'استئجار خوذة (إضافي)' }
@@ -176,12 +179,14 @@ const CONFIG = {
   appsScriptUrl: 'https://script.google.com/macros/s/AKfycbyX80BdKV6fdp7ylZwmIKVSQOGWLQugqnoEs57EiViBZNdN5zI0U08qsVyo1iebB6N7ow/exec',
 
   pricing: {
-    base: { regular: 400, highHP: 500 },
+    base: { regular: 400, highHP: 500, mazda: 900, porsche: 1300, m3: 2600 },
     addons: { additionalDriver: 250, helmetRental: 50 },
     deposit: 50
   },
 
-  validMatrixPrices: [400, 450, 500, 550, 650, 700, 750, 800, 850]
+  // Pre-validated matrix removed: with 5 car classes + 4 add-on combinations the matrix is large
+  // and the CardCom proxy now creates LPs dynamically per-customer (any amount).
+  validMatrixPrices: null
 };
 
 /* ====== DOM REFERENCES ====== */
@@ -283,12 +288,21 @@ function collectFormData() {
   return data;
 }
 
+const CAR_LABEL_KEY = {
+  regular: 'carRegular',
+  highHP:  'carHighHP',
+  mazda:   'carMazda',
+  porsche: 'carPorsche',
+  m3:      'carM3'
+};
+
 function calculatePrice(d) {
   const breakdown = [];
   const L = key => I18N_BREAKDOWN[key][currentLang] || I18N_BREAKDOWN[key].he;
-  let total = d.carClass === 'highHP' ? CONFIG.pricing.base.highHP : CONFIG.pricing.base.regular;
+  const carKey = (d.carClass && CONFIG.pricing.base[d.carClass] != null) ? d.carClass : 'regular';
+  let total = CONFIG.pricing.base[carKey];
   breakdown.push({
-    label: d.carClass === 'highHP' ? L('carHighHP') : L('carRegular'),
+    label: L(CAR_LABEL_KEY[carKey]),
     amount: total
   });
 
@@ -310,7 +324,7 @@ function calculatePrice(d) {
 
   const payNow = d.paymentOption === 'full' ? total : CONFIG.pricing.deposit;
   const payLater = d.paymentOption === 'full' ? 0 : Math.max(0, total - CONFIG.pricing.deposit);
-  const validPrice = CONFIG.validMatrixPrices.includes(total);
+  const validPrice = CONFIG.validMatrixPrices ? CONFIG.validMatrixPrices.includes(total) : true;
 
   return { total, payNow, payLater, breakdown, validPrice };
 }

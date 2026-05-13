@@ -969,6 +969,17 @@ label > select.invalid {
 }
 .radio-group.small { padding: 0.85rem; }
 
+.group-subhead {
+  margin: 0.6rem 0.1rem 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent, #c8a85a);
+  opacity: 0.85;
+}
+.group-subhead:first-of-type { margin-top: 0.2rem; }
+
 .radio-tile {
   display: flex;
   align-items: center;
