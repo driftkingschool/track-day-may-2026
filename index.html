@@ -282,12 +282,19 @@
 
         <fieldset class="radio-group">
           <legend><span data-he="רישיון נהיגת מירוצים תקף" data-en="Valid racing license" data-ru="Действующая гоночная лицензия" data-ar="رخصة سباق سارية">רישיון נהיגת מירוצים תקף</span> <span class="req">*</span></legend>
-          <small class="hint" data-he="⚠️ רישיון מירוצים חובה לכל מי שנוהג ברכב שלו במסלול." data-en="⚠️ Racing license required for anyone driving their own car." data-ru="⚠️ Гоночная лицензия обязательна для каждого, кто едет на своей машине." data-ar="⚠️ رخصة السباق إلزامية لكل من يقود سيارته في المضمار.">⚠️ רישיון מירוצים חובה לכל מי שנוהג ברכב שלו במסלול.</small>
+          <small class="hint" data-he="⚠️ רישיון מירוצים נדרש רק לנהיגה ברכב פרטי. אין לך רישיון? אפשר לנהוג ברכב של DKS עם מדריך מוסמך לידך." data-en="⚠️ Racing license required only for driving your own car. No license? You can drive a DKS car with a certified instructor next to you." data-ru="⚠️ Лицензия нужна только для своей машины. Нет лицензии? Можно ехать на машине DKS с сертифицированным инструктором рядом." data-ar="⚠️ رخصة السباق مطلوبة فقط لقيادة سيارتك الخاصة. لا توجد رخصة؟ يمكنك قيادة سيارة DKS مع مدرب معتمد بجانبك.">⚠️ רישיון מירוצים נדרש רק לנהיגה ברכב פרטי. אין לך רישיון? אפשר לנהוג ברכב של DKS עם מדריך מוסמך לידך.</small>
           <label class="radio-tile">
             <input type="radio" name="racingLicense" value="yes" required>
             <div>
               <strong data-he="כן, יש לי רישיון מירוצים תקף" data-en="Yes, I have a valid racing license" data-ru="Да, у меня есть лицензия" data-ar="نعم، لدي رخصة سباق سارية">כן, יש לי רישיון מירוצים תקף</strong>
-              <span data-he="אני נוהג בעצמי במסלול" data-en="I'll drive myself" data-ru="Я буду ехать сам" data-ar="سأقود بنفسي">אני נוהג בעצמי במסלול</span>
+              <span data-he="אני נוהג בעצמי ברכב שלי" data-en="I'll drive myself in my own car" data-ru="Я буду ехать сам на своей машине" data-ar="سأقود بنفسي في سيارتي">אני נוהג בעצמי ברכב שלי</span>
+            </div>
+          </label>
+          <label class="radio-tile">
+            <input type="radio" name="racingLicense" value="with_instructor" required>
+            <div>
+              <strong data-he="אין לי רישיון, נוהג ברכב של DKS עם מדריך" data-en="No license, driving a DKS car with an instructor" data-ru="Нет лицензии, еду на машине DKS с инструктором" data-ar="ليس لدي رخصة، أقود سيارة DKS مع مدرب">אין לי רישיון, נוהג ברכב של DKS עם מדריך</strong>
+              <span data-he="מדריך מוסמך לידי, רכב של DKS" data-en="Certified instructor with me, DKS car" data-ru="Сертифицированный инструктор рядом, машина DKS" data-ar="مدرب معتمد معي، سيارة DKS">מדריך מוסמך לידי, רכב של DKS</span>
             </div>
           </label>
           <label class="radio-tile">
@@ -440,7 +447,7 @@
 
     <details>
       <summary data-he="האם צריך רישיון מירוצים?" data-en="Do I need a racing license?" data-ru="Нужна ли гоночная лицензия?" data-ar="هل أحتاج إلى رخصة سباق؟">האם צריך רישיון מירוצים?</summary>
-      <p data-he="חובה. כל מי שנוהג ברכב שלו במסלול חייב רישיון נהיגת מירוצים תקף. אם אין לך, אתה יכול להגיע כנהג נוסף ברכב של חבר שיש לו רישיון, או כמלווה (לא נוהג)." data-en="Required. Anyone driving their own car on track must have a valid racing license. Without one, you can join as co-driver in a friend's car, or as a non-driving escort." data-ru="Обязательна. Каждый, кто едет на своей машине, должен иметь действующую лицензию. Без неё можно присоединиться как пассажир или сопровождение." data-ar="إلزامية. كل من يقود سيارته في المضمار يجب أن تكون لديه رخصة سباق سارية. بدونها يمكنك الانضمام كسائق ثانٍ أو كمرافق غير سائق.">חובה. כל מי שנוהג ברכב שלו במסלול חייב רישיון נהיגת מירוצים תקף. אם אין לך, אתה יכול להגיע כנהג נוסף ברכב של חבר שיש לו רישיון, או כמלווה (לא נוהג).</p>
+      <p data-he="לא בהכרח. רישיון נדרש רק אם אתה רוצה לנהוג ברכב הפרטי שלך. אין לך רישיון? יש לך 2 אופציות: לנהוג ברכב של DKS עם מדריך מוסמך לידך (האישור שלנו לאירוע מאפשר זאת), או להצטרף כנהג נוסף ברכב של חבר עם רישיון." data-en="Not necessarily. License is required only if you want to drive your own private car. No license? You have 2 options: drive a DKS car with a certified instructor next to you (our event authorization permits this), or join as co-driver in a friend's car with a license." data-ru="Не обязательно. Лицензия нужна только если вы хотите ехать на своей машине. Нет лицензии? У вас 2 варианта: ехать на машине DKS с сертифицированным инструктором рядом (наше разрешение это позволяет), или присоединиться как доп. водитель в машине друга с лицензией." data-ar="ليس بالضرورة. الرخصة مطلوبة فقط إذا كنت تريد قيادة سيارتك الخاصة. لا توجد رخصة؟ لديك خياران: قيادة سيارة DKS مع مدرب معتمد بجانبك (تصريحنا للفعالية يسمح بذلك)، أو الانضمام كسائق إضافي في سيارة صديق لديه رخصة.">לא בהכרח. רישיון נדרש רק אם אתה רוצה לנהוג ברכב הפרטי שלך. אין לך רישיון? יש לך 2 אופציות: לנהוג ברכב של DKS עם מדריך מוסמך לידך (האישור שלנו לאירוע מאפשר זאת), או להצטרף כנהג נוסף ברכב של חבר עם רישיון.</p>
     </details>
 
     <details>
